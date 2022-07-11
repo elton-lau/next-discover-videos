@@ -1,12 +1,19 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import styles from './navbar.module.css'
 import Image from 'next/image'
+import { useUserEmail, useSignOut, useAuthenticated } from '@nhost/react';
 
-const Navbar = (props) => {
-  const { username } = props
-  const router = useRouter()
+
+const Navbar = () => {
+  const email = useUserEmail()
+  const { signOut } = useSignOut()
+  const isAuthenticated = useAuthenticated()
+
+  useEffect(() => {
+    console.log(isAuthenticated)
+  }, [isAuthenticated])
 
   const [showDropdown, setShowDropdown] = useState(false)
 
@@ -38,14 +45,14 @@ const Navbar = (props) => {
         <nav className={styles.navContainer}>
           <div className="">
             <button className={styles.usernameBtn} onClick={handleShowDropdown}>
-              <p className={styles.username}>{username}</p>
+              <p className={styles.username}>{email}</p>
               <Image src={'/static/expand_more.svg'} alt="Expand dropdown" width="24px" height="24px" />
             </button>
 
             {showDropdown && <div className={styles.navDropdown}>
               <div>
                 <Link href="/login">
-                  <a className={styles.linkName}>Sign out</a>
+                  <a className={styles.linkName} onClick={signOut}>Sign out</a>
                 </Link>
                 <div className={styles.lineWrapper}></div>
               </div>

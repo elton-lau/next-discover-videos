@@ -7,6 +7,7 @@ import Card from '../components/card/card';
 import SectionCards from '../components/card/sectionCards';
 import { getVideos, getPopularVideos } from '../lib/videos';
 import { dehydrate, QueryClient, useQuery } from 'react-query';
+import { authProtected } from '../components/authProtected'
 
 export async function getServerSideProps(context) {
   const queryClient = new QueryClient();
@@ -24,7 +25,7 @@ export async function getServerSideProps(context) {
   }
 }
 
-export default function Home(props) {
+function Home(props) {
   const { data: disneyVideos = [], isLoading, isError, error } = useQuery('disneyVideos', () => getVideos('disney trailer'))
   const { data: travelVideos = [] } = useQuery('travelVideos', () => getVideos('travel'))
   const { data: productivityVideos = [] } = useQuery('productivityVideos', () => getVideos('productivity'))
@@ -52,9 +53,8 @@ export default function Home(props) {
           <SectionCards title="Popular" videos={popularVideos} size="small" />
         </div>
       </div>
-
-
-
     </div>
   )
 }
+
+export default authProtected(Home)
